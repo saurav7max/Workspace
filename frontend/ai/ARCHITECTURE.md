@@ -1,0 +1,3 @@
+- Feature-based folder structure
+- No business logic in UI components
+- Shared logic goes in hooks or services
