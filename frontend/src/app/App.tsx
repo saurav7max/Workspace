@@ -3,7 +3,6 @@ import { AuthProvider } from '../shared/hooks/useAuth';
 import { CommandRegistryProvider } from '../shared/hooks/useCommandRegistry';
 import { useKeyboardShortcuts } from '../shared/hooks/useKeyboardShortcuts';
 import { ProtectedRoute } from '../shared/components/ProtectedRoute';
-import { CommandDebugger } from '../shared/components/CommandDebugger';
 import { CommandPalette } from '../shared/components/CommandPalette';
 import { AppHeader } from '../shared/components/AppHeader';
 import { LoginPage } from '../features/auth/LoginPage';
@@ -64,9 +63,6 @@ function AppContent() {
       
       {/* Command Palette - Self-contained with trigger and modal */}
       <CommandPalette />
-      
-      {/* Debug interface */}
-      <CommandDebugger />
     </>
   );
 }
