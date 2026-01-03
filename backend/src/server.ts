@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-
+import taskRoutes from "./routes/task.route";
 const app = express();
 
 // app.use(cors());
@@ -9,6 +9,8 @@ const app = express();
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
 });
+
+app.use("/tasks", taskRoutes);
 
 const PORT = 14000;
 app.listen(PORT, () => {
