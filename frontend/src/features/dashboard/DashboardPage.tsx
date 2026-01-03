@@ -1,39 +1,41 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { taskService } from '../../services/taskService';
+import { useTasksQuery } from '../../shared/hooks/useTasksQuery';
 import type { Task } from '../../shared/types';
 
 export function DashboardPage() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const taskData = await taskService.getTasks();
-        setTasks(taskData);
-      } catch (error) {
-        console.error('Failed to load tasks:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadTasks();
-  }, []);
+  const { data: tasks = [], isLoading, error } = useTasksQuery();
 
   const lastUpdatedTask = tasks.length > 0 
-    ? tasks.reduce((latest, task) => 
+    ? tasks.reduce((latest: Task, task: Task) => 
         new Date(task.createdAt) > new Date(latest.createdAt) ? task : latest
       )
     : null;
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-8 max-w-6xl mx-auto">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h2>
           <p className="text-gray-600">Loading your tasks...</p>
+        </div>
+        <div className="animate-pulse">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-gray-200 h-32 rounded-lg"></div>
+            <div className="bg-gray-200 h-32 rounded-lg"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h2>
+          <div className="bg-red-50 border border-red-200 rounded-md p-4">
+            <p className="text-red-600">Error loading tasks: {error.message}</p>
+          </div>
         </div>
       </div>
     );

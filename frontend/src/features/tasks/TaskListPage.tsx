@@ -1,40 +1,15 @@
-import { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { taskService } from '../../services/taskService';
+import { useTasksQuery, useDeleteTaskMutation } from '../../shared/hooks/useTasksQuery';
 import type { Task } from '../../shared/types';
 
 export function TaskListPage() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadTasks = useCallback(async () => {
-    try {
-      setLoading(true);
-      const taskData = await taskService.getTasks();
-      const sortedTasks = taskData.sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      setTasks(sortedTasks);
-    } catch (error) {
-      console.error('Failed to load tasks:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadTasks();
-  }, [loadTasks]);
+  const { data: tasks = [], isLoading, error } = useTasksQuery();
+  const deleteTaskMutation = useDeleteTaskMutation();
 
   const handleDelete = async (id: string, title: string) => {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
       try {
-        const success = await taskService.deleteTask(id);
-        if (success) {
-          await loadTasks(); // Reload tasks after deletion
-        } else {
-          alert('Failed to delete task');
-        }
+        await deleteTaskMutation.mutateAsync(id);
       } catch (error) {
         console.error('Failed to delete task:', error);
         alert('Failed to delete task');
@@ -42,12 +17,30 @@ export function TaskListPage() {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-8 max-w-4xl mx-auto">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">My Tasks</h2>
           <p className="text-gray-600">Loading your tasks...</p>
+        </div>
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="animate-pulse bg-gray-200 h-24 rounded-lg"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 max-w-4xl mx-auto">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">My Tasks</h2>
+          <div className="bg-red-50 border border-red-200 rounded-md p-4">
+            <p className="text-red-600">Error loading tasks: {error.message}</p>
+          </div>
         </div>
       </div>
     );
@@ -93,7 +86,7 @@ export function TaskListPage() {
       </div>
 
       <div className="space-y-4">
-        {tasks.map((task) => (
+        {tasks.map((task: Task) => (
           <div
             key={task.id}
             className="bg-white p-6 rounded-lg shadow-sm border border-gray-200"
@@ -120,9 +113,14 @@ export function TaskListPage() {
                 </Link>
                 <button
                   onClick={() => handleDelete(task.id, task.title)}
-                  className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  disabled={deleteTaskMutation.isPending}
+                  className={`px-3 py-1 text-white text-sm rounded transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ${
+                    deleteTaskMutation.isPending
+                      ? 'bg-red-400 cursor-not-allowed'
+                      : 'bg-red-600 hover:bg-red-700'
+                  }`}
                 >
-                  Delete
+                  {deleteTaskMutation.isPending ? 'Deleting...' : 'Delete'}
                 </button>
               </div>
             </div>

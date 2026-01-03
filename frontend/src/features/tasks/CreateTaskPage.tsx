@@ -1,34 +1,35 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { taskService } from '../../services/taskService';
+import { useCreateTaskMutation } from '../../shared/hooks/useTasksQuery';
 
 export function CreateTaskPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [validationError, setValidationError] = useState('');
   const navigate = useNavigate();
+  const createTaskMutation = useCreateTaskMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setValidationError('');
 
     if (!title.trim()) {
-      setError('Title is required');
+      setValidationError('Title is required');
       return;
     }
 
-    setLoading(true);
-
     try {
-      await taskService.createTask(title.trim(), description.trim());
+      await createTaskMutation.mutateAsync({
+        title: title.trim(),
+        description: description.trim()
+      });
       navigate('/tasks');
-    } catch {
-      setError('Failed to create task');
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error('Failed to create task:', error);
     }
   };
+
+  const displayError = validationError || (createTaskMutation.error?.message);
 
   return (
     <div className="p-8 max-w-2xl mx-auto">
@@ -67,23 +68,23 @@ export function CreateTaskPage() {
             />
           </div>
 
-          {error && (
+          {displayError && (
             <div className="text-red-600 mb-6 p-3 bg-red-50 border border-red-200 rounded-md">
-              {error}
+              {displayError}
             </div>
           )}
 
           <div className="flex gap-4">
             <button
               type="submit"
-              disabled={loading}
+              disabled={createTaskMutation.isPending}
               className={`px-8 py-3 bg-green-600 text-white rounded-md font-semibold transition-colors ${
-                loading 
+                createTaskMutation.isPending 
                   ? 'opacity-60 cursor-not-allowed' 
                   : 'hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
               }`}
             >
-              {loading ? 'Creating...' : 'Create Task'}
+              {createTaskMutation.isPending ? 'Creating...' : 'Create Task'}
             </button>
 
             <Link

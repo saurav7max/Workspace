@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Task } from '../shared/types';
 
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = "http://localhost:14000";
 
 // Create axios instance with default config
 const api = axios.create({
