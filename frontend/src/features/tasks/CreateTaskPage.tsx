@@ -21,7 +21,7 @@ export function CreateTaskPage() {
     setLoading(true);
 
     try {
-      taskService.createTask(title.trim(), description.trim());
+      await taskService.createTask(title.trim(), description.trim());
       navigate('/tasks');
     } catch {
       setError('Failed to create task');

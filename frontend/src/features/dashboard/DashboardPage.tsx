@@ -1,14 +1,43 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { taskService } from '../../services/taskService';
+import type { Task } from '../../shared/types';
 
 export function DashboardPage() {
-  const tasks = taskService.getTasks();
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const taskData = await taskService.getTasks();
+        setTasks(taskData);
+      } catch (error) {
+        console.error('Failed to load tasks:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTasks();
+  }, []);
 
   const lastUpdatedTask = tasks.length > 0 
     ? tasks.reduce((latest, task) => 
         new Date(task.createdAt) > new Date(latest.createdAt) ? task : latest
       )
     : null;
+
+  if (loading) {
+    return (
+      <div className="p-8 max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h2>
+          <p className="text-gray-600">Loading your tasks...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 max-w-6xl mx-auto">

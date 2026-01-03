@@ -12,15 +12,24 @@ export function EditTaskPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (id) {
-      const task = taskService.getTaskById(id);
-      if (task) {
-        setTitle(task.title);
-        setDescription(task.description);
-      } else {
-        setTaskNotFound(true);
+    const loadTask = async () => {
+      if (id) {
+        try {
+          const task = await taskService.getTaskById(id);
+          if (task) {
+            setTitle(task.title);
+            setDescription(task.description);
+          } else {
+            setTaskNotFound(true);
+          }
+        } catch (error) {
+          console.error('Failed to load task:', error);
+          setTaskNotFound(true);
+        }
       }
-    }
+    };
+
+    loadTask();
   }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,7 +49,7 @@ export function EditTaskPage() {
     setLoading(true);
 
     try {
-      const updated = taskService.updateTask(id, {
+      const updated = await taskService.updateTask(id, {
         title: title.trim(),
         description: description.trim()
       });

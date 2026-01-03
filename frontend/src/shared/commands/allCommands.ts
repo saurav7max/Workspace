@@ -1,7 +1,8 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { taskService } from '../../services/taskService';
-import type { Command, CommandCategory } from '../types';
+import type { Command, CommandCategory, Task } from '../types';
+import { useEffect, useState } from 'react';
 
 /**
  * Simple, centralized command definitions
@@ -12,9 +13,22 @@ export function useAllCommands(): { commands: Command[], categories: CommandCate
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
+  const [tasks, setTasks] = useState<Task[]>([]);
   
-  // Get current data
-  const tasks = taskService.getTasks();
+  // Load tasks asynchronously
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const taskData = await taskService.getTasks();
+        setTasks(taskData);
+      } catch (error) {
+        console.error('Failed to load tasks for commands:', error);
+        setTasks([]);
+      }
+    };
+    
+    loadTasks();
+  }, []);
   
   const categories: CommandCategory[] = [
     { id: 'navigation', label: 'Navigation', priority: 0 },

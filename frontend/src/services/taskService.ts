@@ -1,50 +1,60 @@
+import axios from 'axios';
 import type { Task } from '../shared/types';
 
-const STORAGE_KEY = 'task_app_tasks';
+const API_BASE_URL = "http://localhost:4000";
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 export const taskService = {
-  getTasks: (): Task[] => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+  async getTasks(): Promise<Task[]> {
+    const response = await api.get('/tasks');
+    return response.data;
   },
 
-  createTask: (title: string, description: string): Task => {
-    const tasks = taskService.getTasks();
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title,
-      description,
-      createdAt: new Date().toISOString()
-    };
-    
-    tasks.push(newTask);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-    return newTask;
+  async createTask(title: string, description: string): Promise<Task> {
+    const response = await api.post('/tasks', { title, description });
+    return response.data;
   },
 
-  updateTask: (id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>): Task | null => {
-    const tasks = taskService.getTasks();
-    const taskIndex = tasks.findIndex(task => task.id === id);
-    
-    if (taskIndex === -1) return null;
-    
-    tasks[taskIndex] = { ...tasks[taskIndex], ...updates };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-    return tasks[taskIndex];
+  async updateTask(id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>): Promise<Task | null> {
+    try {
+      const response = await api.put(`/tasks/${id}`, updates);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+      throw error;
+    }
   },
 
-  deleteTask: (id: string): boolean => {
-    const tasks = taskService.getTasks();
-    const filteredTasks = tasks.filter(task => task.id !== id);
-    
-    if (filteredTasks.length === tasks.length) return false;
-    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredTasks));
-    return true;
+  async deleteTask(id: string): Promise<boolean> {
+    try {
+      await api.delete(`/tasks/${id}`);
+      return true;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return false;
+      }
+      throw error;
+    }
   },
 
-  getTaskById: (id: string): Task | null => {
-    const tasks = taskService.getTasks();
-    return tasks.find(task => task.id === id) || null;
+  async getTaskById(id: string): Promise<Task | null> {
+    try {
+      const response = await api.get(`/tasks/${id}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+      throw error;
+    }
   }
 };
