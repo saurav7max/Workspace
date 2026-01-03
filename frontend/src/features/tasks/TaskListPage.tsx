@@ -30,15 +30,13 @@ export function TaskListPage() {
   if (tasks.length === 0) {
     return (
       <div className="p-8 max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Tasks</h1>
-          <Link to="/dashboard" className="text-blue-600 hover:text-blue-800 font-medium">
-            ← Back to Dashboard
-          </Link>
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">My Tasks</h2>
+          <p className="text-gray-600">Manage and organize your tasks</p>
         </div>
 
-        <div className="text-center p-12 bg-gray-50 rounded-lg">
-          <h2 className="text-2xl font-semibold text-gray-700 mb-4">No tasks yet!</h2>
+        <div className="text-center p-12 bg-white rounded-lg shadow-sm border border-gray-200">
+          <h3 className="text-2xl font-semibold text-gray-700 mb-4">No tasks yet!</h3>
           <p className="text-gray-600 mb-6">Create your first task to get started.</p>
           <Link
             to="/tasks/new"
@@ -54,16 +52,16 @@ export function TaskListPage() {
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My Tasks ({tasks.length})</h1>
-        <div className="flex gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">My Tasks ({tasks.length})</h2>
+          <p className="text-gray-600">Manage and organize your tasks</p>
+        </div>
+        <div className="flex items-center gap-4">
           <Link
             to="/tasks/new"
             className="px-4 py-2 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
             New Task
-          </Link>
-          <Link to="/dashboard" className="text-blue-600 hover:text-blue-800 font-medium">
-            ← Dashboard
           </Link>
         </div>
       </div>

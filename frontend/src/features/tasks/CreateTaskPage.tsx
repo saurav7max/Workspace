@@ -32,11 +32,9 @@ export function CreateTaskPage() {
 
   return (
     <div className="p-8 max-w-2xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Create New Task</h1>
-        <Link to="/tasks" className="text-blue-600 hover:text-blue-800 font-medium">
-          ← Back to Tasks
-        </Link>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Create New Task</h2>
+        <p className="text-gray-600">Add a new task to your list</p>
       </div>
 
       <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">

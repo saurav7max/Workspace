@@ -60,7 +60,7 @@ export function EditTaskPage() {
   if (taskNotFound) {
     return (
       <div className="p-8 max-w-2xl mx-auto">
-        <div className="text-center p-12 bg-gray-50 rounded-lg">
+        <div className="text-center p-12 bg-white rounded-lg shadow-sm border border-gray-200">
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">Task Not Found</h2>
           <p className="text-gray-600 mb-6">The task you're looking for doesn't exist.</p>
           <Link
@@ -76,11 +76,9 @@ export function EditTaskPage() {
 
   return (
     <div className="p-8 max-w-2xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Edit Task</h1>
-        <Link to="/tasks" className="text-blue-600 hover:text-blue-800 font-medium">
-          ← Back to Tasks
-        </Link>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Edit Task</h2>
+        <p className="text-gray-600">Update your task details</p>
       </div>
 
       <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">

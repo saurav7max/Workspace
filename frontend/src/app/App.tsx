@@ -4,6 +4,8 @@ import { CommandRegistryProvider } from '../shared/hooks/useCommandRegistry';
 import { useKeyboardShortcuts } from '../shared/hooks/useKeyboardShortcuts';
 import { ProtectedRoute } from '../shared/components/ProtectedRoute';
 import { CommandDebugger } from '../shared/components/CommandDebugger';
+import { CommandPalette } from '../shared/components/CommandPalette';
+import { AppHeader } from '../shared/components/AppHeader';
 import { LoginPage } from '../features/auth/LoginPage';
 import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { TaskListPage } from '../features/tasks/TaskListPage';
@@ -19,26 +21,51 @@ function AppContent() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
-            <DashboardPage />
+            <div className="min-h-screen bg-gray-50">
+              <AppHeader />
+              <main>
+                <DashboardPage />
+              </main>
+            </div>
           </ProtectedRoute>
         } />
         <Route path="/tasks" element={
           <ProtectedRoute>
-            <TaskListPage />
+            <div className="min-h-screen bg-gray-50">
+              <AppHeader />
+              <main>
+                <TaskListPage />
+              </main>
+            </div>
           </ProtectedRoute>
         } />
         <Route path="/tasks/new" element={
           <ProtectedRoute>
-            <CreateTaskPage />
+            <div className="min-h-screen bg-gray-50">
+              <AppHeader />
+              <main>
+                <CreateTaskPage />
+              </main>
+            </div>
           </ProtectedRoute>
         } />
         <Route path="/tasks/:id/edit" element={
           <ProtectedRoute>
-            <EditTaskPage />
+            <div className="min-h-screen bg-gray-50">
+              <AppHeader />
+              <main>
+                <EditTaskPage />
+              </main>
+            </div>
           </ProtectedRoute>
         } />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
+      
+      {/* Command Palette - Self-contained with trigger and modal */}
+      <CommandPalette />
+      
+      {/* Debug interface */}
       <CommandDebugger />
     </>
   );

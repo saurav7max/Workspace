@@ -15,14 +15,6 @@ export function useKeyboardShortcuts() {
         }
         return;
       }
-
-      // Check for Ctrl+K or Cmd+K (future command palette trigger)
-      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
-        event.preventDefault();
-        console.log('Command palette shortcut triggered! (not implemented yet)');
-        console.log('Available commands:', getAvailableCommands());
-        return;
-      }
     };
 
     document.addEventListener('keydown', handleKeyDown);
