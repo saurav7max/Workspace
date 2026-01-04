@@ -9,7 +9,7 @@ export function DashboardPage() {
   const taskList = tasks || [];
 
   const lastUpdatedTask = taskList.length > 0 
-    ? taskList.reduce((latest: Task, task: any) => 
+    ? taskList.reduce((latest: Task, task: Task) => 
         new Date(task.createdAt) > new Date(latest.createdAt) ? task : latest
       )
     : null;
