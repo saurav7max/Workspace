@@ -6,6 +6,22 @@ export function getTasks(req: Request, res: Response) {
   res.json(tasks);
 }
 
+export function getTaskById(req: Request, res: Response) {
+  const { id } = req.params;
+  
+  if (!id) {
+    return res.status(400).json({ message: "Task ID is required" });
+  }
+
+  const task = taskService.getTaskById(id);
+
+  if (!task) {
+    return res.status(404).json({ message: "Task not found" });
+  }
+
+  res.json(task);
+}
+
 export function createTask(req: Request, res: Response) {
   const task = taskService.createTask(req.body);
   res.status(201).json(task);

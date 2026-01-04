@@ -1,9 +1,13 @@
+import db from "../db/database";
 import { Task } from "../types/task";
 
-const tasks: Task[] = [];
-
 export function getTasks(): Task[] {
-  return tasks;
+  return db.prepare(`SELECT * FROM tasks`).all() as Task[];
+}
+
+export function getTaskById(id: string): Task | null {
+  const task = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(id) as Task | undefined;
+  return task || null;
 }
 
 export function createTask(data: Omit<Task, "id" | "createdAt">): Task {
@@ -12,32 +16,35 @@ export function createTask(data: Omit<Task, "id" | "createdAt">): Task {
     createdAt: new Date().toISOString(),
     ...data,
   };
-
-  tasks.push(task);
+  db.prepare(
+    `INSERT INTO tasks (id, title, description, createdAt)
+    VALUES (@id, @title, @description, @createdAt)`
+  ).run(task);
   return task;
 }
 
-export function updateTask(
-  id: string,
-  updates: Partial<Task>
-): Task | null {
-  const task = tasks.find((t) => t.id === id);
+export function updateTask(id: string, updates: Partial<Task>): Task | null {
+  const task = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(id) as
+    | Task
+    | undefined;
 
   if (!task) {
     return null;
   }
 
-  Object.assign(task, updates); // merge updates into task
+  Object.assign(task, updates);
+
+  db.prepare(
+    `UPDATE tasks SET title = @title, description = @description WHERE id = @id`
+  ).run(task);
+
   return task;
 }
 
 export function deleteTask(id: string): boolean {
-  const index = tasks.findIndex((t) => t.id === id);
+  const result = db
+    .prepare("DELETE FROM tasks WHERE id = ?")
+    .run(id);
 
-  if (index === -1) {
-    return false;
-  }
-
-  tasks.splice(index, 1); // remove task from array
-  return true;
+  return result.changes > 0;
 }

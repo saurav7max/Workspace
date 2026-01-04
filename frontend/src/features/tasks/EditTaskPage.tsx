@@ -18,10 +18,21 @@ export function EditTaskPage() {
   const { data: task, loading: taskLoading, error: taskError } = useTask(id);
   const updateTaskMutation = useUpdateTask();
 
-  return <EditForm task={task} taskLoading={taskLoading} taskError={taskError} updateTaskMutation={updateTaskMutation} navigate={navigate} />;
+  // Use key prop to reset form when task changes
+  return (
+    <EditForm 
+      key={task?.id || 'loading'} // Reset component when task changes
+      task={task} 
+      taskLoading={taskLoading} 
+      taskError={taskError} 
+      updateTaskMutation={updateTaskMutation} 
+      navigate={navigate} 
+    />
+  );
 }
 
 function EditForm({ task, taskLoading, taskError, updateTaskMutation, navigate }: EditFormProps) {
+  // Initialize with task data directly (no useEffect needed)
   const [title, setTitle] = useState(task?.title || '');
   const [description, setDescription] = useState(task?.description || '');
   const [validationError, setValidationError] = useState('');
@@ -43,7 +54,7 @@ function EditForm({ task, taskLoading, taskError, updateTaskMutation, navigate }
     try {
       await updateTaskMutation.mutateAsync({
         id: task.id,
-        updates: {
+        data: {
           title: title.trim(),
           description: description.trim()
         }

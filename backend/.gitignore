@@ -170,3 +170,9 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Database files
+dev-workspace.db
+*.db
+*.sqlite
+*.sqlite3
