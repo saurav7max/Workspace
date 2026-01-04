@@ -85,7 +85,7 @@ function EditForm({ task, taskLoading, taskError, updateTaskMutation, navigate }
       <div className="p-8 max-w-2xl mx-auto">
         <div className="text-center p-12 bg-white rounded-lg shadow-sm border border-gray-200">
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">Task Not Found</h2>
-          <p className="text-gray-600 mb-6">The task you're looking for doesn't exist.</p>
+          <p className="text-gray-600 mb-6">The task you&apos;re looking for doesn&apos;t exist.</p>
           <Link
             to="/tasks"
             className="inline-block px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"

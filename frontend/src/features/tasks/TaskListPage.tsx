@@ -46,7 +46,7 @@ export function TaskListPage() {
     );
   }
 
-  if (tasks.length === 0) {
+  if (tasks?.length === 0) {
     return (
       <div className="p-8 max-w-4xl mx-auto">
         <div className="mb-8">
@@ -72,7 +72,7 @@ export function TaskListPage() {
     <div className="p-8 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">My Tasks ({tasks.length})</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">My Tasks ({tasks?.length})</h2>
           <p className="text-gray-600">Manage and organize your tasks</p>
         </div>
         <div className="flex items-center gap-4">
@@ -86,7 +86,7 @@ export function TaskListPage() {
       </div>
 
       <div className="space-y-4">
-        {tasks.map((task: Task) => (
+        {tasks?.map((task: Task) => (
           <div
             key={task.id}
             className="bg-white p-6 rounded-lg shadow-sm border border-gray-200"
