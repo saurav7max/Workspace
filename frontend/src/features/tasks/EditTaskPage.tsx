@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useTaskQuery, useUpdateTaskMutation } from '../../shared/hooks/useTasksQuery';
+import { useTask, useUpdateTask } from '../../shared/hooks/useTasks';
 import type { Task } from '../../shared/types';
 
 interface EditFormProps {
   task: Task | null;
   taskLoading: boolean;
-  taskError: Error | null;
-  updateTaskMutation: ReturnType<typeof useUpdateTaskMutation>;
+  taskError: string | null;
+  updateTaskMutation: ReturnType<typeof useUpdateTask>;
   navigate: ReturnType<typeof useNavigate>;
 }
 
@@ -15,8 +15,8 @@ export function EditTaskPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  const { data: task, isLoading: taskLoading, error: taskError } = useTaskQuery(id);
-  const updateTaskMutation = useUpdateTaskMutation();
+  const { data: task, loading: taskLoading, error: taskError } = useTask(id);
+  const updateTaskMutation = useUpdateTask();
 
   return <EditForm task={task} taskLoading={taskLoading} taskError={taskError} updateTaskMutation={updateTaskMutation} navigate={navigate} />;
 }
@@ -54,8 +54,8 @@ function EditForm({ task, taskLoading, taskError, updateTaskMutation, navigate }
     }
   };
 
-  const displayError = validationError || updateTaskMutation.error?.message || taskError?.message;
-  const loading = taskLoading || updateTaskMutation.isPending;
+  const displayError = validationError || updateTaskMutation.error || taskError;
+  const loading = taskLoading || updateTaskMutation.loading;
 
   if (taskLoading) {
     return (
@@ -139,7 +139,7 @@ function EditForm({ task, taskLoading, taskError, updateTaskMutation, navigate }
                   : 'hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
               }`}
             >
-              {updateTaskMutation.isPending ? 'Updating...' : 'Update Task'}
+              {updateTaskMutation.loading ? 'Updating...' : 'Update Task'}
             </button>
 
             <Link

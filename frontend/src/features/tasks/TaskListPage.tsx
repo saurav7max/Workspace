@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { useTasksQuery, useDeleteTaskMutation } from '../../shared/hooks/useTasksQuery';
+import { useTasks, useDeleteTask } from '../../shared/hooks/useTasks';
 import type { Task } from '../../shared/types';
 
 export function TaskListPage() {
-  const { data: tasks = [], isLoading, error } = useTasksQuery();
-  const deleteTaskMutation = useDeleteTaskMutation();
+  const { data: tasks = [], loading, error } = useTasks();
+  const deleteTaskMutation = useDeleteTask();
 
   const handleDelete = async (id: string, title: string) => {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
@@ -17,7 +17,7 @@ export function TaskListPage() {
     }
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="p-8 max-w-4xl mx-auto">
         <div className="mb-8">
@@ -39,7 +39,7 @@ export function TaskListPage() {
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">My Tasks</h2>
           <div className="bg-red-50 border border-red-200 rounded-md p-4">
-            <p className="text-red-600">Error loading tasks: {error.message}</p>
+            <p className="text-red-600">Error loading tasks: {error}</p>
           </div>
         </div>
       </div>
@@ -113,14 +113,14 @@ export function TaskListPage() {
                 </Link>
                 <button
                   onClick={() => handleDelete(task.id, task.title)}
-                  disabled={deleteTaskMutation.isPending}
+                  disabled={deleteTaskMutation.loading}
                   className={`px-3 py-1 text-white text-sm rounded transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ${
-                    deleteTaskMutation.isPending
+                    deleteTaskMutation.loading
                       ? 'bg-red-400 cursor-not-allowed'
                       : 'bg-red-600 hover:bg-red-700'
                   }`}
                 >
-                  {deleteTaskMutation.isPending ? 'Deleting...' : 'Delete'}
+                  {deleteTaskMutation.loading ? 'Deleting...' : 'Delete'}
                 </button>
               </div>
             </div>

@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClientProvider } from '../shared/lib/queryClientFallback';
-import { AuthProvider } from '../shared/hooks/useAuth';
+import { AuthProvider } from '../shared/contexts/AuthProvider';
 import { CommandRegistryProvider } from '../shared/hooks/useCommandRegistry';
 import { useKeyboardShortcuts } from '../shared/hooks/useKeyboardShortcuts';
 import { ProtectedRoute } from '../shared/components/ProtectedRoute';
@@ -70,14 +69,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <QueryClientProvider>
-      <AuthProvider>
-        <Router>
-          <CommandRegistryProvider>
-            <AppContent />
-          </CommandRegistryProvider>
-        </Router>
-      </AuthProvider>
-    </QueryClientProvider>
+    <AuthProvider>
+      <Router>
+        <CommandRegistryProvider>
+          <AppContent />
+        </CommandRegistryProvider>
+      </Router>
+    </AuthProvider>
   );
 }

@@ -1,6 +1,11 @@
 import { Router } from "express";
-import * as taskController from "../controllers/task.controller"
-const router = Router()
+import * as taskController from "../controllers/task.controller";
+import { authMiddleware } from "../middleware/auth.middleware";
+
+const router = Router();
+
+// Protect all task routes with authentication
+router.use(authMiddleware);
 
 router.get('/', taskController.getTasks);
 router.post('/', taskController.createTask);

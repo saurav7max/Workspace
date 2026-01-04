@@ -1,17 +1,20 @@
 import { Link } from 'react-router-dom';
-import { useTasksQuery } from '../../shared/hooks/useTasksQuery';
+import { useTasks } from '../../shared/hooks/useTasks';
 import type { Task } from '../../shared/types';
 
 export function DashboardPage() {
-  const { data: tasks = [], isLoading, error } = useTasksQuery();
+  const { data: tasks, loading, error } = useTasks();
 
-  const lastUpdatedTask = tasks.length > 0 
-    ? tasks.reduce((latest: Task, task: Task) => 
+  // Ensure tasks is always an array
+  const taskList = tasks || [];
+
+  const lastUpdatedTask = taskList.length > 0 
+    ? taskList.reduce((latest: Task, task: Task) => 
         new Date(task.createdAt) > new Date(latest.createdAt) ? task : latest
       )
     : null;
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="p-8 max-w-6xl mx-auto">
         <div className="mb-8">
@@ -34,7 +37,7 @@ export function DashboardPage() {
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h2>
           <div className="bg-red-50 border border-red-200 rounded-md p-4">
-            <p className="text-red-600">Error loading tasks: {error.message}</p>
+            <p className="text-red-600">Error loading tasks: {error}</p>
           </div>
         </div>
       </div>
@@ -52,7 +55,7 @@ export function DashboardPage() {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <h3 className="text-lg font-semibold text-gray-700 mb-4">Total Tasks</h3>
           <div className="text-3xl font-bold text-blue-600">
-            {tasks.length}
+            {taskList.length}
           </div>
         </div>
 
@@ -83,7 +86,7 @@ export function DashboardPage() {
         </Link>
       </div>
 
-      {tasks.length === 0 && (
+      {taskList.length === 0 && (
         <div className="mt-8 p-8 bg-gray-50 rounded-lg text-center">
           <h3 className="text-xl font-semibold text-gray-700 mb-2">No tasks yet!</h3>
           <p className="text-gray-600">Get started by creating your first task.</p>

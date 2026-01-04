@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCreateTaskMutation } from '../../shared/hooks/useTasksQuery';
+import { useCreateTask } from '../../shared/hooks/useTasks';
 
 export function CreateTaskPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [validationError, setValidationError] = useState('');
   const navigate = useNavigate();
-  const createTaskMutation = useCreateTaskMutation();
+  const createTaskMutation = useCreateTask();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +29,7 @@ export function CreateTaskPage() {
     }
   };
 
-  const displayError = validationError || (createTaskMutation.error?.message);
+  const displayError = validationError || (createTaskMutation.error);
 
   return (
     <div className="p-8 max-w-2xl mx-auto">
@@ -77,14 +77,14 @@ export function CreateTaskPage() {
           <div className="flex gap-4">
             <button
               type="submit"
-              disabled={createTaskMutation.isPending}
+              disabled={createTaskMutation.loading}
               className={`px-8 py-3 bg-green-600 text-white rounded-md font-semibold transition-colors ${
-                createTaskMutation.isPending 
+                createTaskMutation.loading 
                   ? 'opacity-60 cursor-not-allowed' 
                   : 'hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
               }`}
             >
-              {createTaskMutation.isPending ? 'Creating...' : 'Create Task'}
+              {createTaskMutation.loading ? 'Creating...' : 'Create Task'}
             </button>
 
             <Link
