@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useTasks } from '../../shared/hooks/useTasks';
-import type { Task } from '../../shared/types';
+import { Link } from "react-router-dom";
+import { useTasks } from "../../shared/hooks/useTasks";
+import type { Task } from "../../shared/types";
 
 export function DashboardPage() {
   const { data: tasks, loading, error } = useTasks();
@@ -8,17 +8,18 @@ export function DashboardPage() {
   // Ensure tasks is always an array
   const taskList = tasks || [];
 
-  const lastUpdatedTask = taskList.length > 0 
-    ? taskList.reduce((latest: Task, task: Task) => 
-        new Date(task.createdAt) > new Date(latest.createdAt) ? task : latest
-      )
-    : null;
+  const lastUpdatedTask =
+    taskList.length > 0
+      ? taskList.reduce((latest: Task, task: Task) =>
+          new Date(task.createdAt) > new Date(latest.createdAt) ? task : latest
+        )
+      : null;
 
   if (loading) {
     return (
       <div className="p-8 max-w-6xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Task Dashboard</h2>
           <p className="text-gray-600">Loading your tasks...</p>
         </div>
         <div className="animate-pulse">
@@ -48,24 +49,31 @@ export function DashboardPage() {
     <div className="p-8 max-w-6xl mx-auto">
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h2>
-        <p className="text-gray-600">Overview of your tasks and recent activity</p>
+        <p className="text-gray-600">
+          Overview of your tasks and recent activity
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Total Tasks</h3>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">
+            Total Tasks
+          </h3>
           <div className="text-3xl font-bold text-blue-600">
             {taskList.length}
           </div>
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Last Updated</h3>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">
+            Last Updated
+          </h3>
           <div className="text-sm text-gray-600">
-            {lastUpdatedTask 
-              ? `${lastUpdatedTask.title} - ${new Date(lastUpdatedTask.createdAt).toLocaleDateString()}`
-              : 'No tasks yet'
-            }
+            {lastUpdatedTask
+              ? `${lastUpdatedTask.title} - ${new Date(
+                  lastUpdatedTask.createdAt
+                ).toLocaleDateString()}`
+              : "No tasks yet"}
           </div>
         </div>
       </div>
@@ -88,8 +96,12 @@ export function DashboardPage() {
 
       {taskList.length === 0 && (
         <div className="mt-8 p-8 bg-gray-50 rounded-lg text-center">
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">No tasks yet!</h3>
-          <p className="text-gray-600">Get started by creating your first task.</p>
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+            No tasks yet!
+          </h3>
+          <p className="text-gray-600">
+            Get started by creating your first task.
+          </p>
         </div>
       )}
     </div>
