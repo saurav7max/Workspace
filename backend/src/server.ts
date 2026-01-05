@@ -1,27 +1,36 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import taskRoutes from "./routes/task.route";
 import authRoutes from "./routes/auth.route";
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 
 // Configure CORS to allow requests from frontend
 app.use(cors({
-  origin: "http://localhost:5173", // Vite default port
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
   credentials: true
 }));
 
 app.use(express.json());
 
 app.get("/health", (_req, res) => {
-  res.json({ status: "ok" });
+  res.json({ 
+    status: "ok",
+    version: process.env.API_VERSION || "v1",
+    environment: process.env.NODE_ENV || "development"
+  });
 });
 
 // Mount routes
 app.use("/auth", authRoutes);
 app.use("/tasks", taskRoutes);
 
-const PORT = 14000;
+const PORT = process.env.PORT || 14000;
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
 });

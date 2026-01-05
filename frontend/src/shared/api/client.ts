@@ -3,15 +3,15 @@ import { authManager } from '../utils/authManager';
 
 // API Configuration
 const API_CONFIG = {
-  baseURL: 'http://localhost:14000',
-  timeout: 10000,
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:14000',
+  timeout: Number(import.meta.env.VITE_API_TIMEOUT) || 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 };
 
 // Token management
-const TOKEN_KEY = 'task_app_token';
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY || 'task_app_token';
 
 class ApiClient {
   private client: AxiosInstance;
