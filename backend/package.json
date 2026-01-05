@@ -1,10 +1,16 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
@@ -12,7 +18,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "better-sqlite3": "^12.5.0",
+    "better-sqlite3": "^11.5.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.2.1",
